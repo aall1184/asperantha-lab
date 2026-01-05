@@ -1,23 +1,22 @@
 "use client";
 import { useState, useEffect } from "react";
 
-// إعدادات المختبر
 const BEANS = {
-  A: { name: "أثيوبي (فاكهي)", color: "bg-amber-500", text: "text-amber-500" },
-  B: { name: "كولومبي (متزن)", color: "bg-orange-600", text: "text-orange-600" },
-  C: { name: "برازيلي (قوام)", color: "bg-yellow-700", text: "text-yellow-700" },
-  D: { name: "إندونيسي (توابل)", color: "bg-stone-600", text: "text-stone-600" }
+  A: { name: "ETHIOPIAN V60", color: "from-cyan-500 to-blue-600", shadow: "shadow-cyan-500/20" },
+  B: { name: "COLOMBIAN DRIP", color: "from-blue-600 to-indigo-600", shadow: "shadow-blue-600/20" },
+  C: { name: "BRAZILIAN BODY", color: "from-indigo-600 to-purple-600", shadow: "shadow-indigo-600/20" },
+  D: { name: "INDONESIAN DARK", color: "from-purple-600 to-fuchsia-600", shadow: "shadow-fuchsia-600/20" }
 };
 
 const questions = [
-  { id: 1, text: "كيف تفضل بداية يومك؟", options: [{ t: "انتعاش وحيوية", s: "A" }, { t: "هدوء وعمق", s: "B" }, { t: "تأمل صامت", s: "C" }, { t: "إنجاز مكثف", s: "D" }] },
-  { id: 2, text: "ما هو الإيحاء المفضل لديك؟", options: [{ t: "ياسمين وفواكه", s: "A" }, { t: "عسل كراميل", s: "B" }, { t: "مكسرات داكنة", s: "C" }, { t: "بهارات وتراب", s: "D" }] },
-  { id: 3, text: "القوام (Body) المثالي؟", options: [{ t: "خفيف حريري", s: "A" }, { t: "متوسط متزن", s: "B" }, { t: "كريمي كثيف", s: "C" }, { t: "ثقيل جداً", s: "D" }] },
-  { id: 4, text: "درجة الحمضية؟", options: [{ t: "بارزة جداً", s: "A" }, { t: "متوسطة الحلاوة", s: "B" }, { t: "منخفضة جداً", s: "C" }, { t: "شبه منعدمة", s: "D" }] },
-  { id: 5, text: "نوع مشروبك المعتاد؟", options: [{ t: "V60 / Cold Brew", s: "A" }, { t: "Aeropress", s: "B" }, { t: "Cortado / Latte", s: "C" }, { t: "Espresso / Turkish", s: "D" }] },
-  { id: 6, text: "نهاية الطعم (Aftertaste)؟", options: [{ t: "نظيف وسريع", s: "A" }, { t: "حلاوة متبقية", s: "B" }, { t: "مرارة محببة", s: "C" }, { t: "نكهة معقدة", s: "D" }] },
-  { id: 7, text: "درجة التحميص؟", options: [{ t: "Light Roast", s: "A" }, { t: "City Roast", s: "B" }, { t: "Full City", s: "C" }, { t: "Dark Roast", s: "D" }] },
-  { id: 8, text: "الغرض من الكوب؟", options: [{ t: "استكشاف سلالة", s: "A" }, { t: "تعديل مزاج", s: "B" }, { t: "تركيز للعمل", s: "C" }, { t: "استمتاع ختامي", s: "D" }] }
+  { id: 1, text: "تحديد نمط الاستيقاظ (Wake-up Pattern)؟", options: [{ t: "نشاط فوري خارق", s: "A" }, { t: "استيعاب تدريجي هادئ", s: "B" }, { t: "تركيز عميق ومنعزل", s: "C" }, { t: "طاقة للعمل الشاق", s: "D" }] },
+  { id: 2, text: "برمجة النكهة (Flavor Programming)؟", options: [{ t: "حمضيات منعشة", s: "A" }, { t: "حلاوة فاكهية", s: "B" }, { t: "مكسرات وكاكاو", s: "C" }, { t: "ترابية وتابلية", s: "D" }] },
+  { id: 3, text: "كثافة البيانات (Body Density)؟", options: [{ t: "01 - خفيف جداً", s: "A" }, { t: "02 - متوسط", s: "B" }, { t: "03 - كثيف", s: "C" }, { t: "04 - مركز جداً", s: "D" }] },
+  { id: 4, text: "مستوى التحميص المعالج (Roast Level)؟", options: [{ t: "LIGHT CORE", s: "A" }, { t: "MEDIUM CORE", s: "B" }, { t: "MEDIUM-DARK", s: "C" }, { t: "DARK CORE", s: "D" }] },
+  { id: 5, text: "بيئة التحضير المفضلة؟", options: [{ t: "مختبر منزلي هادئ", s: "A" }, { t: "مقهى عملي سريع", s: "B" }, { t: "تحضير يدوي كلاسيكي", s: "C" }, { t: "ماكينة إسبريسو قوية", s: "D" }] },
+  { id: 6, text: "تأثير ما بعد الرشفة (Output)؟", options: [{ t: "صفاء ذهني", s: "A" }, { t: "تعديل مزاج", s: "B" }, { t: "يقظة مستمرة", s: "C" }, { t: "استمتاع بالمذاق", s: "D" }] },
+  { id: 7, text: "درجة الحرارة المستهدفة؟", options: [{ t: "باردة جداً (ICE)", s: "A" }, { t: "ساخنة معتدلة", s: "B" }, { t: "حرارة مرتفعة", s: "C" }, { t: "بدرجة حرارة الغرفة", s: "D" }] },
+  { id: 8, text: "الهدف النهائي من المعالجة؟", options: [{ t: "إلهام وإبداع", s: "A" }, { t: "استرخاء عضلي", s: "B" }, { t: "تنفيذ مهام", s: "C" }, { t: "تواصل اجتماعي", s: "D" }] }
 ];
 
 export default function Home() {
@@ -25,13 +24,7 @@ export default function Home() {
   const [step, setStep] = useState(0); 
   const [currentQ, setCurrentQ] = useState(0);
   const [ratios, setRatios] = useState({ A: 25, B: 25, C: 25, D: 25 });
-  const [history, setHistory] = useState<any[]>([]);
   const [blendCode, setBlendCode] = useState("");
-
-  useEffect(() => {
-    const saved = localStorage.getItem("lab_history");
-    if (saved) setHistory(JSON.parse(saved));
-  }, []);
 
   const handleAnswer = (s: string) => {
     const updated = { ...ratios };
@@ -43,119 +36,116 @@ export default function Home() {
     
     setRatios(updated);
     if (currentQ < questions.length - 1) setCurrentQ(currentQ + 1);
-    else finishAnalysis(updated);
-  };
-
-  const finishAnalysis = (finalRatios: any) => {
-    const code = `#${Math.floor(Math.random()*16777215).toString(16).toUpperCase()}`;
-    setBlendCode(code);
-    const result = { name: userName, code, ratios: finalRatios, date: new Date().toLocaleDateString() };
-    const newHistory = [result, ...history].slice(0, 5);
-    setHistory(newHistory);
-    localStorage.setItem("lab_history", JSON.stringify(newHistory));
-    setStep(3);
-  };
-
-  const shareOnWhatsApp = () => {
-    const text = `مرحباً، أنا ${userName}. لقد صممت بلند القهوة الخاص بي في مختبر اسبرنثا بكود: ${blendCode}. النسب: أثيوبي ${Math.round(ratios.A)}%، كولومبي ${Math.round(ratios.B)}%، برازيلي ${Math.round(ratios.C)}%، إندونيسي ${Math.round(ratios.D)}%.`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+    else {
+      setBlendCode(`#${Math.floor(Math.random()*16777215).toString(16).toUpperCase()}`);
+      setStep(3);
+    }
   };
 
   return (
-    <main className="min-h-screen bg-[#020202] text-white p-6 font-sans flex items-center justify-center">
-      {/* Background Lighting */}
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-900/10 via-black to-black"></div>
+    <main className="min-h-screen bg-[#000] text-[#e0e0e0] p-6 font-mono selection:bg-cyan-500/30">
+      {/* AI Grid Background */}
+      <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+      <div className="fixed inset-0 bg-radial-at-t from-cyan-900/20 via-black to-black"></div>
 
-      <div className="w-full max-w-4xl space-y-12">
+      <div className="relative z-10 max-w-5xl mx-auto min-h-screen flex flex-col items-center justify-center">
+        
         {step === 0 && (
-          <div className="text-center space-y-8 animate-in fade-in duration-1000">
-            <h1 className="text-6xl font-black tracking-tighter italic">ASPERANZA LAB</h1>
-            <input 
-              type="text" 
-              placeholder="سجل اسمك لفتح المختبر..." 
-              className="bg-transparent border-b border-white/10 p-4 w-full max-w-sm text-center focus:border-amber-600 transition-all outline-none text-2xl"
-              onChange={(e) => setUserName(e.target.value)}
-            />
-            <button onClick={() => userName && setStep(1)} className="block mx-auto px-12 py-4 bg-white text-black font-bold tracking-widest text-xs rounded-full">ACCESS LAB</button>
-            
-            {history.length > 0 && (
-              <div className="pt-12 space-y-4">
-                <h3 className="text-[10px] tracking-widest text-gray-600">PREVIOUS RECORDS</h3>
-                {history.map((h, i) => (
-                  <div key={i} className="text-xs text-gray-500">{h.name} - {h.code} - {h.date}</div>
-                ))}
-              </div>
-            )}
+          <div className="text-center space-y-10 animate-pulse">
+            <h2 className="text-cyan-500 text-xs tracking-[1em] mb-4">SYSTEM INITIALIZATION</h2>
+            <h1 className="text-6xl font-thin tracking-tighter text-white uppercase">Asperanza <span className="font-bold text-cyan-400">Core</span></h1>
+            <div className="relative group">
+               <input 
+                type="text" 
+                placeholder="Identify Operator..." 
+                className="bg-transparent border border-cyan-500/30 p-5 w-72 text-center focus:border-cyan-400 transition-all outline-none rounded-sm uppercase text-sm tracking-widest"
+                onChange={(e) => setUserName(e.target.value)}
+              />
+              <div className="absolute -inset-1 bg-cyan-500/20 blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+            </div>
+            <button onClick={() => userName && setStep(1)} className="block mx-auto px-10 py-3 border border-cyan-500 text-cyan-500 text-[10px] hover:bg-cyan-500 hover:text-black transition-all">CONNECT</button>
           </div>
         )}
 
         {step === 1 && (
-          <div className="text-center space-y-8 animate-in zoom-in duration-500">
-            <h2 className="text-5xl font-light">أهلاً، <span className="text-amber-500 font-bold">{userName}</span></h2>
-            <p className="text-gray-500 max-w-sm mx-auto lowercase leading-relaxed text-sm">أنت على وشك بدء 8 مراحل من التحليل الهندسي لذائقتك.</p>
-            <button onClick={() => setStep(2)} className="px-12 py-4 border border-amber-600/30 text-amber-500 text-[10px] tracking-[0.4em] font-bold rounded-full hover:bg-amber-600 hover:text-white transition-all">START ENGINE</button>
+          <div className="text-center space-y-8 animate-in fade-in duration-1000">
+            <h2 className="text-3xl font-light tracking-widest uppercase">Operator: <span className="text-cyan-400">{userName}</span></h2>
+            <p className="text-cyan-500/50 text-xs">Access Granted. Calibrating taste sensors...</p>
+            <button onClick={() => setStep(2)} className="px-12 py-4 bg-cyan-500 text-black text-[10px] font-bold tracking-[0.5em] hover:bg-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.5)]">START ANALYSIS</button>
           </div>
         )}
 
         {step === 2 && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-10 text-right">
-              <span className="text-amber-600 font-mono text-xs uppercase tracking-widest">Stage 0{currentQ + 1}</span>
-              <h2 className="text-3xl font-medium leading-snug">{questions[currentQ].text}</h2>
-              <div className="grid gap-4">
+          <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+            <div className="space-y-12 animate-in slide-in-from-left-10 duration-700">
+              <div className="inline-block px-3 py-1 bg-cyan-500/10 border border-cyan-500/50 text-cyan-500 text-[9px]">PROCESS_STAGE_0{currentQ + 1}</div>
+              <h2 className="text-3xl font-bold uppercase tracking-tighter leading-none text-white">{questions[currentQ].text}</h2>
+              <div className="grid gap-3">
                 {questions[currentQ].options.map((opt, i) => (
-                  <button key={i} onClick={() => handleAnswer(opt.s)} className="p-6 border border-white/5 bg-white/[0.02] rounded-2xl hover:border-amber-600/50 hover:bg-amber-600/5 transition-all text-sm text-gray-400 hover:text-white">
-                    {opt.t}
+                  <button key={i} onClick={() => handleAnswer(opt.s)} className="p-5 border border-white/5 bg-white/[0.02] hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all text-left text-xs tracking-widest group flex justify-between items-center">
+                    <span>{opt.t}</span>
+                    <span className="opacity-0 group-hover:opacity-100 text-cyan-400">-{">"}</span>
                   </button>
                 ))}
               </div>
             </div>
             
-            <div className="bg-white/[0.02] border border-white/5 p-10 rounded-[2.5rem] backdrop-blur-2xl">
-              <h3 className="text-center text-[9px] tracking-[0.5em] text-gray-600 mb-8 uppercase">Real-time Blending</h3>
-              <div className="space-y-6">
-                {(Object.keys(ratios) as Array<keyof typeof ratios>).map(key => (
-                  <div key={key} className="space-y-2">
-                    <div className="flex justify-between text-[10px] font-mono text-gray-500">
-                      <span>{BEANS[key].name}</span>
-                      <span>{Math.round(ratios[key])}%</span>
+            <div className="bg-black border border-cyan-500/20 p-10 rounded-sm relative overflow-hidden">
+               <div className="absolute top-0 left-0 w-full h-[1px] bg-cyan-500/30 animate-scan"></div>
+               <h3 className="text-[10px] text-cyan-500/50 mb-10 tracking-[0.3em]">REAL-TIME_DATA_STREAM</h3>
+               <div className="space-y-8">
+                  {(Object.keys(ratios) as Array<keyof typeof ratios>).map(key => (
+                    <div key={key} className="space-y-3">
+                      <div className="flex justify-between text-[9px] font-mono">
+                        <span className="text-gray-500">{BEANS[key].name}</span>
+                        <span className="text-cyan-400">{Math.round(ratios[key])}%</span>
+                      </div>
+                      <div className="h-[2px] bg-white/5 w-full relative">
+                        <div className={`h-full bg-gradient-to-r ${BEANS[key].color} transition-all duration-700`} style={{ width: `${ratios[key]}%` }}></div>
+                      </div>
                     </div>
-                    <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                      <div className={`h-full ${BEANS[key].color} transition-all duration-700`} style={{ width: `${ratios[key]}%` }}></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+               </div>
             </div>
           </div>
         )}
 
         {step === 3 && (
-          <div className="text-center space-y-10 animate-in fade-in zoom-in duration-1000">
-            <h2 className="text-amber-500 text-[10px] tracking-[0.6em] font-bold uppercase">Analysis Final Report</h2>
-            <h1 className="text-7xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600 uppercase">{userName}'S DNA</h1>
+          <div className="text-center space-y-12 animate-in zoom-in duration-700 w-full max-w-3xl">
+            <h2 className="text-cyan-500 text-[10px] tracking-[1em] font-bold">DNA_EXTRACTION_COMPLETE</h2>
+            <h1 className="text-7xl font-black italic tracking-tighter text-white uppercase">{userName}_V1.0</h1>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {(Object.keys(ratios) as Array<keyof typeof ratios>).map(key => (
-                <div key={key} className="p-6 bg-white/[0.03] border border-white/5 rounded-3xl">
-                  <span className={`text-3xl font-bold block mb-1 ${BEANS[key].text}`}>{Math.round(ratios[key])}%</span>
-                  <span className="text-[8px] text-gray-600 tracking-widest">{BEANS[key].name}</span>
+                <div key={key} className="p-6 border border-cyan-500/20 bg-cyan-950/10 group hover:border-cyan-500/50 transition-all">
+                  <span className="text-3xl font-bold block mb-1 text-white">{Math.round(ratios[key])}%</span>
+                  <span className="text-[8px] text-cyan-600 tracking-widest uppercase">{BEANS[key].name}</span>
                 </div>
               ))}
             </div>
 
-            <div className="bg-amber-600/10 border border-amber-600/20 p-8 rounded-[2rem] inline-block">
-              <span className="text-[10px] text-amber-500 tracking-widest block mb-2">UNIQUE FORMULA CODE</span>
-              <div className="text-4xl font-mono font-bold">{blendCode}</div>
+            <div className="p-10 border border-cyan-500/50 bg-black relative">
+              <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-black px-4 text-cyan-500 text-[9px] tracking-widest">UNIQUE_ACCESS_KEY</span>
+              <div className="text-5xl font-mono font-bold text-white tracking-widest">{blendCode}</div>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-4 pt-8">
-              <button onClick={shareOnWhatsApp} className="px-10 py-4 bg-white text-black text-[10px] font-bold tracking-widest rounded-full hover:bg-amber-600 hover:text-white transition-all">ORDER VIA WHATSAPP</button>
-              <button onClick={() => window.location.reload()} className="px-10 py-4 border border-white/10 text-[10px] font-bold tracking-widest rounded-full">NEW EXPERIMENT</button>
+            <div className="flex flex-col md:flex-row justify-center gap-6">
+              <button onClick={() => window.location.reload()} className="px-10 py-4 bg-cyan-500 text-black text-[10px] font-bold tracking-widest hover:bg-cyan-400 transition-all">REBOOT_SYSTEM</button>
             </div>
           </div>
         )}
       </div>
+
+      <style jsx global>{`
+        @keyframes scan {
+          0% { top: 0; }
+          100% { top: 100%; }
+        }
+        .animate-scan {
+          position: absolute;
+          animation: scan 3s linear infinite;
+        }
+      `}</style>
     </main>
   );
 } 
