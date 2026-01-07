@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 
-// الألوان المستخرجة من صورتك بدقة
 const BEANS = {
   A: { name: "أثيوبي (عطري)", color: "bg-[#9D59B1]", text: "text-[#9D59B1]" },
   B: { name: "كولومبي (ناعم)", color: "bg-[#4A90E2]", text: "text-[#4A90E2]" },
@@ -43,9 +42,13 @@ export default function Home() {
     }
   };
 
+  const sendOrder = () => {
+    const text = `مرحباً، لقد استخرجت بصمة القهوة الخاصة بي في مختبر اسبرنثا! ☕️✨%0A%0Aالاسم: ${userName}%0Aكود البلند: ${blendCode}%0Aالنسب:%0A- أثيوبي: ${Math.round(ratios.A)}%%0A- كولومبي: ${Math.round(ratios.B)}%%0A- برازيلي: ${Math.round(ratios.C)}%%0A- إندونيسي: ${Math.round(ratios.D)}%`;
+    window.open(`https://wa.me/?text=${text}`, '_blank');
+  };
+
   return (
     <main className="min-h-screen bg-[#0A0A0B] text-white p-6 font-sans flex items-center justify-center relative overflow-hidden">
-      {/* إضاءات الخلفية المستوحاة من صورتك */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-[#9D59B1]/20 blur-[100px] rounded-full"></div>
         <div className="absolute bottom-[-10%] left-[-5%] w-80 h-80 bg-[#4A90E2]/15 blur-[80px] rounded-full"></div>
@@ -53,24 +56,24 @@ export default function Home() {
 
       <div className="relative z-10 w-full max-w-4xl text-center">
         {step === 0 && (
-          <div className="space-y-8">
+          <div className="space-y-8 animate-in fade-in duration-1000">
             <h2 className="text-[#9D59B1] text-[10px] tracking-[1em] uppercase">Laboratory Access</h2>
             <h1 className="text-6xl font-black italic tracking-tighter">ASPERANZA <span className="text-[#4A90E2]">CORE</span></h1>
             <div className="flex flex-col items-center gap-4">
               <input 
                 type="text" 
                 placeholder="Identify Operator..." 
-                className="bg-white/5 border border-white/10 p-4 w-72 text-center outline-none focus:border-[#9D59B1] transition-all rounded-xl"
+                className="bg-white/5 border border-white/10 p-4 w-72 text-center outline-none focus:border-[#9D59B1] transition-all rounded-xl placeholder:text-gray-600"
                 onChange={(e) => setUserName(e.target.value)}
               />
-              <button onClick={() => userName && setStep(1)} className="px-10 py-3 bg-gradient-to-r from-[#9D59B1] to-[#4A90E2] text-white font-bold rounded-full text-[10px] tracking-widest">INITIALIZE</button>
+              <button onClick={() => userName && setStep(1)} className="px-10 py-3 bg-gradient-to-r from-[#9D59B1] to-[#4A90E2] text-white font-bold rounded-full text-[10px] tracking-widest hover:scale-105 transition-transform">INITIALIZE</button>
             </div>
           </div>
         )}
 
         {step === 1 && (
-          <div className="space-y-8 animate-pulse">
-            <h2 className="text-4xl font-light tracking-tight">Operator Identified: <span className="text-[#9D59B1] font-bold">{userName}</span></h2>
+          <div className="space-y-8 animate-in zoom-in duration-500">
+            <h2 className="text-4xl font-light tracking-tight">Operator Identified: <span className="text-[#9D59B1] font-bold uppercase">{userName}</span></h2>
             <button onClick={() => setStep(2)} className="px-12 py-4 border border-[#4A90E2] text-[#4A90E2] text-[10px] tracking-[0.4em] rounded-full hover:bg-[#4A90E2] hover:text-white transition-all">START ANALYSIS</button>
           </div>
         )}
@@ -110,29 +113,43 @@ export default function Home() {
 
         {step === 3 && (
           <div className="space-y-10 animate-in zoom-in duration-700">
-            <h2 className="text-[#9D59B1] text-[10px] tracking-[0.5em] font-bold uppercase">Extraction Complete</h2>
-            <h1 className="text-6xl font-black italic tracking-tighter uppercase">{userName}'S DNA</h1>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {(Object.keys(ratios) as Array<keyof typeof ratios>).map(key => (
-                <div key={key} className="p-6 bg-white/[0.03] border border-white/10 rounded-3xl group hover:border-[#9D59B1]/30 transition-all">
-                  <span className={`text-2xl font-bold block ${BEANS[key].text}`}>{Math.round(ratios[key])}%</span>
-                  <span className="text-[8px] text-gray-600 tracking-widest uppercase">{BEANS[key].name}</span>
+            <div className="flex flex-col md:flex-row items-center gap-10 justify-center">
+                {/* كيس القهوة الرقمي */}
+                <div className="w-64 h-80 bg-gradient-to-b from-gray-900 to-black border border-white/10 rounded-t-[3rem] p-6 relative shadow-2xl overflow-hidden group">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#9D59B1] to-[#4A90E2]"></div>
+                    <div className="mt-10 text-center">
+                        <div className="text-[8px] tracking-[0.5em] text-[#9D59B1] mb-2 uppercase">Signature Blend</div>
+                        <h3 className="text-2xl font-black italic mb-6 border-b border-white/5 pb-4 uppercase">{userName}</h3>
+                        <div className="space-y-3">
+                            {Object.keys(ratios).map(key => (
+                                <div key={key} className="flex justify-between text-[8px] font-mono opacity-60">
+                                    <span>{BEANS[key as keyof typeof BEANS].name}</span>
+                                    <span>{Math.round(ratios[key as keyof typeof ratios])}%</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-[#4A90E2]">{blendCode}</div>
                 </div>
-              ))}
-            </div>
 
-            <div className="p-8 border border-[#4A90E2]/30 bg-[#4A90E2]/5 rounded-[2rem] inline-block">
-              <span className="text-[10px] text-[#4A90E2] tracking-widest block mb-2 uppercase">Your Blend Code</span>
-              <div className="text-4xl font-mono font-bold text-white uppercase">{blendCode}</div>
-            </div>
+                <div className="text-right space-y-6 max-w-md">
+                    <h2 className="text-[#9D59B1] text-[10px] tracking-[0.5em] font-bold uppercase">Extraction Complete</h2>
+                    <h1 className="text-6xl font-black italic tracking-tighter uppercase leading-none">{userName}'S<br/> DNA BLEND</h1>
+                    
+                    <div className="p-6 border border-[#4A90E2]/30 bg-[#4A90E2]/5 rounded-3xl">
+                        <span className="text-[10px] text-[#4A90E2] tracking-widest block mb-2 uppercase">Your Blend Key</span>
+                        <div className="text-4xl font-mono font-bold text-white uppercase">{blendCode}</div>
+                    </div>
 
-            <div className="flex justify-center gap-4">
-               <button onClick={() => window.location.reload()} className="px-10 py-4 border border-white/10 text-[10px] font-bold tracking-widest rounded-full hover:bg-white hover:text-black transition-all">NEW EXPERIMENT</button>
+                    <div className="flex flex-wrap gap-3 justify-end">
+                        <button onClick={sendOrder} className="px-8 py-4 bg-green-600/20 text-green-400 border border-green-600/30 rounded-full text-[10px] font-bold tracking-widest hover:bg-green-600 hover:text-white transition-all">SHARE TO WHATSAPP</button>
+                        <button onClick={() => window.location.reload()} className="px-8 py-4 bg-white text-black rounded-full text-[10px] font-bold tracking-widest hover:bg-gray-200 transition-all">NEW SCAN</button>
+                    </div>
+                </div>
             </div>
           </div>
         )}
       </div>
     </main>
   );
-}  
+} 
